@@ -44,23 +44,44 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.querySelector('.signup-form');
-            form.addEventListener('submit', (e) => {
-                e.preventDefault(); 
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-pass').value;
-                const confirmPassword = document.getElementById('signup-confirm-pass').value;
+            const BACKEND_URL = 'https://app.netlify.com/projects/prismatic-bonbon-a9242c/deploys';
 
-                if (password !== confirmPassword) {
-                    alert("Passwords do not match!");
-                    return;
-                }
-                
-                if (email && password) {
-                    const userData = { email: email, password: password };
-                    localStorage.setItem('ticketgo_database', JSON.stringify(userData));
-                    localStorage.setItem('ticketgo_user', email);
-                    alert("Account created successfully!");
-                    window.location.href = 'Main_Page.html'; 
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault(); 
+                const inputEmail = document.getElementById('signin-email').value;
+                const inputPass = document.getElementById('signin-pass').value;
+
+                try {
+                    // 呼叫後端 API 進行登入
+                    const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: inputEmail,
+                            password: inputPass 
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert("Login successful!");
+                        
+                        // 關鍵：將 Email 存入 localStorage 作為臨時身份標識，
+                        // 用於後續呼叫保護路由 (如購物車和訂單)
+                        localStorage.setItem('ticketgo_user', inputEmail); 
+                        
+                        // 導向主頁
+                        window.location.href = 'Main_Page.html'; 
+
+                    } else {
+                        // 登入失敗：顯示後端傳來的錯誤訊息
+                        alert(`Login failed: ${data.message || 'Email or password is invalid'}`);
+                    }
+
+                } catch (error) {
+                    console.error('Login API Error:', error);
+                    alert("Network Error. Unable to connect to the server. Please try again later.");
                 }
             });
         });
