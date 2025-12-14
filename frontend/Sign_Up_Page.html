@@ -46,23 +46,42 @@
             const form = document.querySelector('.signup-form');
             const BACKEND_URL = 'https://ticketgo-api-txjr.onrender.com';
 
-            form.addEventListener('submit', (e) => {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault(); 
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-pass').value;
-                const confirmPassword = document.getElementById('signup-confirm-pass').value;
+                const inputEmail = document.getElementById('signup-email').value;
+                const inputPass = document.getElementById('signup-pass').value;
+                const inputConfirmPass = document.getElementById('signup-confirm-pass').value;
 
-                if (password !== confirmPassword) {
+                if (inputPass !== inputConfirmPass) {
                     alert("Passwords do not match!");
                     return;
                 }
+
+                try {
+                    // ✅ 關鍵修正：呼叫後端 API 進行註冊 (register)
+                    const response = await fetch(`${BACKEND_URL}/api/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: inputEmail,
+                            password: inputPass 
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        alert("Registration successful! Please proceed to the login page.");
+                        // ✅ 修正：註冊成功後應跳轉到登入頁面
+                        window.location.href = 'Login_In_Page.html'; 
+                    } else {
+                        // 顯示後端傳來的錯誤訊息 (例如：Email 已被註冊)
+                        alert(`Registration failed: ${data.message || 'Server error'}`);
+                    }
                 
-                if (email && password) {
-                    const userData = { email: email, password: password };
-                    localStorage.setItem('ticketgo_database', JSON.stringify(userData));
-                    localStorage.setItem('ticketgo_user', email);
-                    alert("Account created successfully!");
-                    window.location.href = 'Main_Page.html'; 
+                } catch (error) {
+                    console.error('Registration API Error:', error);
+                    alert("Network error. Unable to connect to the server. Please try again later.");
                 }
             });
         });
