@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketGo - Select Seats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="seat_selection.css">
+</head>
+<body>
+
+    <div class="header-bar">
+        <span>Use code <strong>"Final"</strong> for 10% off</span>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">
+            <a href="Main_Page.html" style="text-decoration: none;">
+                <span class="logo-ticket">Ticket</span><span class="logo-go">Go</span>
+            </a>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="user-menu-wrapper">
+                <a href="Login_In_Page.html" class="nav-button sign-in-button">Sign In</a>
+                
+                <span id="cartBadge" class="cart-badge" style="display:none;">0</span>
+                <div class="user-dropdown">
+                    <div class="cart-header-title">My Cart</div>
+                    <ul id="cartList" class="cart-items-list">
+                        <li class="empty-msg">Cart is empty</li>
+                    </ul>
+                    <div class="cart-footer">
+                        <div class="cart-total">Total: <span id="cartTotalDisplay">$0</span></div>
+                        <button class="checkout-btn" onclick="window.location.href='Cart_Page.html'">Checkout</button>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item logout-link">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <div class="event-info-card">
+            <div class="event-img" id="event-img"></div>
+            <h1 class="event-title" id="event-title">Loading...</h1>
+            <p class="event-meta">
+                <span id="event-date">...</span><br>
+                <span id="event-venue">...</span>
+            </p>
+            <div class="price-tag">Price: $<span id="base-price">0</span></div>
+        </div>
+
+        <div class="seat-map-container">
+            <div class="stage-block">STAGE</div>
+            
+            <div class="legend">
+                <div class="legend-item"><div class="dot avail"></div>Available</div>
+                <div class="legend-item"><div class="dot selected"></div>Selected</div>
+                <div class="legend-item"><div class="dot sold"></div>Sold</div>
+            </div>
+
+            <div class="seat-grid" id="seat-grid"></div>
+        </div>
+
+    </main>
+
+    <div class="floating-bar" id="floating-bar">
+        <div class="selection-info">
+            <span class="selection-count">0 seats selected</span>
+            <span class="total-price" id="total-price-display">$0</span>
+        </div>
+        <button class="add-cart-btn" id="add-to-cart-btn" disabled>Add to Cart</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. User & Dropdown Logic ---
+            const savedEmail = localStorage.getItem('ticketgo_user');
+            const signInBtn = document.querySelector('.sign-in-button');
+            const dropdown = document.querySelector('.user-dropdown');
+            const logoutLink = document.querySelector('.logout-link');
+            const badge = document.getElementById('cartBadge');
+            const cartList = document.getElementById('cartList');
+            const cartTotalDisplay = document.getElementById('cartTotalDisplay');
+
+            // 登錄顯示邏輯
+            if (savedEmail && signInBtn) {
+                signInBtn.textContent = savedEmail.substring(0, 5);
+                signInBtn.href = "#";
+                signInBtn.addEventListener('click', (e) => { 
+                    e.preventDefault(); 
+                    e.stopPropagation(); 
+                    dropdown.classList.toggle('active'); 
+                });
+                if(logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); localStorage.removeItem('ticketgo_user'); window.location.reload(); });
+                
+                document.addEventListener('click', (e) => { 
+                    if (!e.target.closest('.user-menu-wrapper')) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+                
+                updateCartUI(); 
+            }
+
+            // --- 2. URL 參數解析 ---
+            const params = new URLSearchParams(window.location.search);
+            const artist = params.get('artist') || 'Unknown Event';
+            const time = params.get('time') || 'TBA';
+            const venue = params.get('venue') || 'TBA';
+            const basePrice = parseInt(params.get('basePrice')) || 100;
+            const imgUrl = params.get('img') || '';
+
+            document.getElementById('event-title').textContent = artist;
+            document.getElementById('event-date').textContent = time;
+            document.getElementById('event-venue').textContent = venue;
+            document.getElementById('base-price').textContent = basePrice;
+            const imgEl = document.getElementById('event-img');
+            if (imgUrl) imgEl.style.backgroundImage = `url('${imgUrl}')`;
+
+            // --- 3. 生成座位圖 ---
+            const grid = document.getElementById('seat-grid');
+            const rows = 8;
+            const cols = 10;
+            const selectedSeats = new Set(); 
+            
+            grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+            const soldSeats = ['1-5', '2-3', '2-4', '5-5', '5-6', '8-1', '8-2'];
+
+            for (let r = 1; r <= rows; r++) {
+                for (let c = 1; c <= cols; c++) {
+                    const seatId = `${r}-${c}`;
+                    const seatDiv = document.createElement('div');
+                    seatDiv.className = 'seat';
+                    seatDiv.dataset.id = `R${r} Seat ${c}`;
+                    seatDiv.dataset.key = seatId; 
+                    
+                    if (soldSeats.includes(seatId)) {
+                        seatDiv.classList.add('sold');
+                    } else {
+                        seatDiv.addEventListener('click', () => toggleSeat(seatDiv, seatId));
+                    }
+                    grid.appendChild(seatDiv);
+                }
+            }
+
+            // --- 4. 選位邏輯 ---
+            const floatingBar = document.getElementById('floating-bar');
+            const countDisplay = document.querySelector('.selection-count');
+            const totalDisplay = document.getElementById('total-price-display');
+            const addBtn = document.getElementById('add-to-cart-btn');
+
+            function toggleSeat(el, id) {
+                if (el.classList.contains('sold')) return;
+                el.classList.toggle('selected');
+                
+                if (el.classList.contains('selected')) {
+                    selectedSeats.add(id);
+                } else {
+                    selectedSeats.delete(id);
+                }
+                updateBar();
+            }
+
+            function updateBar() {
+                const count = selectedSeats.size;
+                const total = count * basePrice;
+                countDisplay.textContent = `${count} seat${count !== 1 ? 's' : ''} selected`;
+                totalDisplay.textContent = `$${total}`;
+                
+                if (count > 0) {
+                    floatingBar.classList.add('active');
+                    addBtn.disabled = false;
+                } else {
+                    floatingBar.classList.remove('active');
+                    addBtn.disabled = true;
+                }
+            }
+
+            // --- 5. 渲染購物車 + 移除功能 ---
+            window.removeItem = function(event, index) {
+                event.stopPropagation();
+                let cart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+                cart.splice(index, 1);
+                localStorage.setItem('ticketgo_cart', JSON.stringify(cart));
+                updateCartUI();
+            };
+
+            function updateCartUI() {
+                let cart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+                
+                if (cart.length > 0) {
+                    badge.textContent = cart.length;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+
+                cartList.innerHTML = '';
+                let total = 0;
+
+                if (cart.length === 0) {
+                    cartList.innerHTML = '<li class="empty-msg">Cart is empty</li>';
+                } else {
+                    cart.forEach((item, index) => {
+                        total += item.totalPrice;
+                        const li = document.createElement('li');
+                        li.className = 'cart-item';
+                        
+                        const ticketCount = item.seats ? item.seats.length : 1;
+                        const ticketText = ticketCount > 1 ? `(${ticketCount} tickets)` : `(${ticketCount} ticket)`;
+
+                        li.innerHTML = `
+                            <div class="cart-item-info">
+                                <span class="cart-item-title">${item.artist}</span>
+                                <span class="cart-item-price">
+                                    $${item.totalPrice} 
+                                    <span style="font-weight:400; color:#86868B; margin-left:4px; font-size:11px;">
+                                        ${ticketText}
+                                    </span>
+                                </span>
+                            </div>
+                            <span class="remove-btn" onclick="removeItem(event, ${index})" title="Remove">&times;</span>
+                        `;
+                        cartList.appendChild(li);
+                    });
+                }
+                cartTotalDisplay.textContent = '$' + total;
+            }
+
+            // --- 6. [修改核心] Add to Cart Logic (合并相同活动) ---
+            addBtn.addEventListener('click', (e) => { 
+                e.stopPropagation();
+
+                if (!savedEmail) {
+                    alert("Please Sign In first to book tickets!");
+                    window.location.href = "Login_In_Page.html";
+                    return;
+                }
+
+                // 1. 构建本次选择的座位数据
+                const newSeats = Array.from(selectedSeats).map(id => {
+                    const [r, c] = id.split('-');
+                    return { id: `Row-${r}-${c}`, type: 'Standard' }; 
+                });
+                const newTotalPrice = newSeats.length * basePrice;
+
+                // 2. 读取现有购物车
+                let cart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+
+                // 3. 检查是否有相同活动 (Artist + Time + Venue)
+                const existingIndex = cart.findIndex(item => 
+                    item.artist === artist && 
+                    item.time === time && 
+                    item.venue === venue
+                );
+
+                if (existingIndex !== -1) {
+                    // [合并逻辑] 如果存在，直接把新座位加进去
+                    cart[existingIndex].seats = cart[existingIndex].seats.concat(newSeats);
+                    cart[existingIndex].totalPrice += newTotalPrice;
+                } else {
+                    // [新增逻辑] 如果不存在，创建新 Item
+                    const newItem = {
+                        artist: artist,
+                        time: time,
+                        venue: venue,
+                        img: imgUrl,
+                        basePrice: basePrice,
+                        seats: newSeats,
+                        totalPrice: newTotalPrice
+                    };
+                    cart.push(newItem);
+                }
+
+                // 4. 保存并更新
+                localStorage.setItem('ticketgo_cart', JSON.stringify(cart));
+                updateCartUI();
+
+                // 5. 视觉反馈
+                addBtn.textContent = "Added!";
+                addBtn.style.backgroundColor = "#34C759"; 
+                dropdown.classList.add('active');
+
+                // 6. 重置状态
+                setTimeout(() => {
+                    addBtn.textContent = "Add to Cart";
+                    addBtn.style.backgroundColor = ""; 
+                    addBtn.disabled = true;
+                    
+                    selectedSeats.forEach(id => {
+                        const seatEl = document.querySelector(`.seat[data-key="${id}"]`);
+                        if(seatEl) seatEl.classList.remove('selected');
+                    });
+                    selectedSeats.clear();
+                    updateBar(); 
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

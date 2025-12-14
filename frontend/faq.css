@@ -1,0 +1,153 @@
+/* ========================================= */
+/* Standardized Apple Style Variables        */
+/* Based on Main Page (content.css)          */
+/* ========================================= */
+:root {
+    --color-bg: #FFFFFF; /* FAQ 頁面維持白底 */
+    --color-text-main: #1D1D1F;    
+    --color-text-secondary: #86868B;
+    --color-accent: #000947;       
+    --color-highlight: #0095FF;    
+    --color-danger: #FF3B30;
+    
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-blur: 20px;
+
+    --padding-sides: 1.5%; /* 統一左右間距 */
+    --radius-card: 16px;
+    --radius-btn: 20px;
+    
+    --font-main: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body, html {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: var(--font-main); background-color: var(--color-bg);
+    color: var(--color-text-main);
+    
+    /* 保持頁面固定，內容在內部滾動 */
+    height: 100vh;
+    overflow: hidden; 
+}
+* { box-sizing: inherit; }
+
+/* ========================================= */
+/* 1. Standardized Header & Navbar           */
+/* ========================================= */
+.header-bar {
+    background-color: #050518;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.navbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px var(--padding-sides); 
+    position: relative; 
+    z-index: 1000;
+    /* FAQ 頁面背景可以透明或跟隨標準，這裡使用標準以統一 */
+    background-color: var(--glass-bg); 
+    backdrop-filter: blur(var(--glass-blur));
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.logo { font-size: 24px; font-weight: 700; }
+.logo-ticket { color: var(--color-text-main); } 
+.logo-go { color: var(--color-highlight); } 
+
+.nav-buttons { display: flex; align-items: center; gap: 20px; }
+.user-menu-wrapper { position: relative; }
+.nav-button { background: none; border: none; font-size: 13px; cursor: pointer; color: var(--color-text-main); }
+
+/* 統一的 Sign In 按鈕 */
+.sign-in-button {
+    background-color: var(--color-accent) !important; color: #fff !important;
+    padding: 8px 20px; border-radius: 20px; font-weight: 600; font-size: 13px;
+    text-decoration: none; display: inline-block; transition: opacity 0.2s; border: none;
+}
+.sign-in-button:hover { opacity: 0.8; }
+
+.user-dropdown { position: absolute; top: 120%; right: 0; width: 160px; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); padding: 6px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(0,0,0,0.05); }
+.user-dropdown.active { display: flex; animation: fadeIn 0.2s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.dropdown-item { padding: 10px 12px; color: var(--color-text-main); text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 8px; display: flex; align-items: center; }
+.dropdown-item:hover { background-color: #F5F5F7; color: var(--color-highlight); }
+.dropdown-divider { height: 1px; background-color: rgba(0,0,0,0.05); margin: 4px 6px; }
+.logout-link { color: var(--color-danger); } .logout-link:hover { background-color: rgba(255, 59, 48, 0.08); color: var(--color-danger); }
+
+
+/* ========================================= */
+/* 2. FAQ Specific Container                 */
+/* ========================================= */
+.faq-container {
+    max-width: 900px; 
+    margin: 0 auto;
+    padding: 20px 20px 60px 20px; 
+    text-align: center;
+    
+    /* 計算剩餘高度，讓它佔滿下方空間並允許內部滾動 */
+    height: calc(100vh - 120px); /* 調整高度以適應新的 Header */
+    overflow-y: auto; 
+    
+    scrollbar-width: none; 
+}
+.faq-container::-webkit-scrollbar { display: none; }
+
+/* Header Section */
+.faq-header { margin-bottom: 40px; }
+.star-icon { color: var(--color-text-main); margin-bottom: 16px; }
+.faq-title { font-size: 48px; font-weight: 600; margin: 0 0 12px 0; color: var(--color-text-main); letter-spacing: -1px; }
+
+.faq-subtitle { font-size: 16px; color: var(--color-text-secondary); line-height: 1.5; font-weight: 400; max-width: 600px; margin: 0 auto; }
+.chat-link { color: var(--color-text-secondary); text-decoration: underline; transition: color 0.2s; }
+.chat-link:hover { color: var(--color-highlight); }
+
+
+/* ========================================= */
+/* 3. Accordion List                         */
+/* ========================================= */
+.faq-list { text-align: left; margin-bottom: 40px; }
+.faq-item { border-bottom: 1px solid #EAECF0; }
+.faq-item:first-child { border-top: 1px solid #EAECF0; }
+
+.faq-item > summary { list-style: none; }
+.faq-item > summary::-webkit-details-marker { display: none; }
+
+.faq-question {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 0; cursor: pointer; font-size: 18px; font-weight: 500;
+    color: var(--color-text-main); transition: color 0.2s;
+}
+.faq-question:hover { color: var(--color-highlight); }
+
+.question-content { display: flex; align-items: center; gap: 16px; }
+
+.icon-box {
+    width: 36px; height: 36px; border: 1px solid #EAECF0; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; color: var(--color-text-main); flex-shrink: 0;
+}
+.icon-box svg { width: 20px; height: 20px; }
+
+.toggle-icon { color: #98A2B3; transition: transform 0.3s ease; }
+details[open] .toggle-icon { transform: rotate(180deg); }
+
+.faq-answer {
+    color: var(--color-text-secondary); font-size: 16px; line-height: 1.6;
+    padding-left: 52px; padding-bottom: 24px; padding-right: 40px; 
+}
+.faq-answer a { color: var(--color-highlight); text-decoration: none; }
+.faq-answer a:hover { text-decoration: underline; }
+
+.faq-answer ul { margin-top: 10px; padding: 0; list-style: none; }
+.faq-answer li { margin-bottom: 12px; }
+
+@media (max-width: 600px) {
+    .faq-title { font-size: 32px; }
+    .question-content { gap: 12px; }
+    .icon-box { width: 32px; height: 32px; }
+    .faq-question { font-size: 16px; }
+    .faq-answer { padding-left: 0; }
+}

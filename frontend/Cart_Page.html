@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketGo - Your Cart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Cart_Page.css">
+</head>
+<body>
+
+    <div class="header-bar">
+        <span>Use code <strong>"Final"</strong> for 10% off</span>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">
+            <a href="Main_Page.html" style="text-decoration: none;">
+                <span class="logo-ticket">Ticket</span><span class="logo-go">Go</span>
+            </a>
+        </div>
+        
+        <div class="nav-buttons">
+            <div class="user-menu-wrapper">
+                <a href="Login_In_Page.html" class="nav-button sign-in-button">Sign In</a>
+                <div class="user-dropdown">
+                    <a href="#" class="dropdown-item logout-link">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="cart-container">
+        <h1>Shopping Cart</h1>
+        
+        <div class="cart-layout">
+            <div class="cart-items-wrapper" id="cart-items-wrapper">
+                <p class="empty-msg">Your cart is empty.</p>
+            </div>
+
+            <div class="cart-summary">
+                <h2>Summary</h2>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal-display">$0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (5%)</span>
+                    <span id="tax-display">$0</span>
+                </div>
+                
+                <div class="summary-row discount-row" id="discount-row" style="display: none; color: #28a745;">
+                    <span>Discount (10%)</span>
+                    <span id="discount-display">-$0</span>
+                </div>
+
+                <div class="promo-code-section">
+                    <input type="text" id="promo-input" placeholder="Enter promo code" class="promo-input">
+                    <button id="apply-btn" class="apply-btn">Apply</button>
+                </div>
+                <p id="promo-msg" class="promo-msg"></p>
+
+                <div class="divider"></div>
+                
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span id="final-total-display">$0</span>
+                </div>
+                <button class="checkout-btn" id="checkout-btn">Checkout</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- 1. 登录检查 ---
+            const savedEmail = localStorage.getItem('ticketgo_user');
+            const signInBtn = document.querySelector('.sign-in-button');
+            const dropdown = document.querySelector('.user-dropdown');
+            const logoutLink = document.querySelector('.logout-link');
+
+            if (savedEmail && signInBtn) {
+                signInBtn.textContent = savedEmail.substring(0, 5);
+                signInBtn.href = "#";
+                signInBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); dropdown.classList.toggle('active'); });
+                if(logoutLink) logoutLink.addEventListener('click', (e) => { e.preventDefault(); localStorage.removeItem('ticketgo_user'); window.location.reload(); });
+                document.addEventListener('click', (e) => { if (!e.target.closest('.user-menu-wrapper')) dropdown.classList.remove('active'); });
+            } else {
+                alert("Please sign in first.");
+                window.location.href = "Login_In_Page.html";
+            }
+
+            // --- 2. 變數聲明 ---
+            const cartWrapper = document.getElementById('cart-items-wrapper');
+            const subtotalEl = document.getElementById('subtotal-display');
+            const taxEl = document.getElementById('tax-display');
+            const totalEl = document.getElementById('final-total-display');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            const promoInput = document.getElementById('promo-input');
+            const applyBtn = document.getElementById('apply-btn');
+            const promoMsg = document.getElementById('promo-msg');
+            const discountRow = document.getElementById('discount-row');
+            const discountEl = document.getElementById('discount-display');
+            
+            let isDiscountApplied = false;
+
+            // --- 3. 渲染購物車 ---
+            function renderCart() {
+                const cart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+                cartWrapper.innerHTML = '';
+                
+                if (cart.length === 0) {
+                    cartWrapper.innerHTML = '<div class="empty-state">Your cart is empty. <a href="content.html">Go browse events</a></div>';
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.style.opacity = '0.5';
+                    updateTotals(0);
+                    return;
+                }
+
+                let subtotal = 0;
+
+                cart.forEach((order, index) => {
+                    subtotal += order.totalPrice;
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'cart-item';
+                    
+                    // 計算票數並生成顯示文字
+                    const ticketCount = order.seats ? order.seats.length : 1;
+                    const ticketCountText = ticketCount > 1 ? `${ticketCount} tickets` : `${ticketCount} ticket`;
+
+                    // 生成座位詳情字串
+                    const seatDetails = order.seats ? order.seats.map(s => {
+                         if(!s.id) return `${s.type}`;
+                         const parts = s.id.split('-');
+                         return `${s.type} (R${parts[1]}-S${parts[2]})`;
+                    }).join(', ') : 'General Admission';
+
+                    itemDiv.innerHTML = `
+                        <div class="item-img" style="background-image: url('${order.img}');"></div>
+                        <div class="item-info">
+                            <h3 class="item-title">${order.artist}</h3>
+                            <p class="item-meta">${order.time} • ${order.venue}</p>
+                            
+                            <p class="item-ticket-count">${ticketCountText}</p>
+
+                            <p class="item-seats">Seats: ${seatDetails}</p>
+                            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+                        </div>
+                        <div class="item-price">$${order.totalPrice}</div>
+                    `;
+                    cartWrapper.appendChild(itemDiv);
+                });
+                
+                checkoutBtn.disabled = false;
+                checkoutBtn.style.opacity = '1';
+                updateTotals(subtotal);
+            }
+
+            // --- 4. 更新總金額 ---
+            function updateTotals(sub) {
+                const tax = Math.round(sub * 0.05);
+                let discount = 0;
+                
+                if (isDiscountApplied) {
+                    discount = Math.round(sub * 0.10);
+                    discountRow.style.display = 'flex';
+                    discountEl.textContent = `-$${discount}`;
+                } else {
+                    discountRow.style.display = 'none';
+                }
+
+                const total = sub + tax - discount;
+                
+                subtotalEl.textContent = `$${sub}`;
+                taxEl.textContent = `$${tax}`;
+                totalEl.textContent = `$${total}`;
+            }
+
+            // --- 5. 應用折扣碼 ---
+            applyBtn.addEventListener('click', () => {
+                const code = promoInput.value.trim().toUpperCase(); 
+                if (code === "FINAL") {
+                    if (!isDiscountApplied) {
+                        isDiscountApplied = true;
+                        promoMsg.textContent = "Code applied successfully!";
+                        promoMsg.style.color = "#28a745";
+                        
+                        promoInput.disabled = true;
+                        applyBtn.disabled = true;
+                        applyBtn.textContent = "Applied";
+                        
+                        // 重新計算總額
+                        const cart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+                        let subtotal = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+                        updateTotals(subtotal);
+                    }
+                } else {
+                    promoMsg.textContent = "Invalid promo code.";
+                    promoMsg.style.color = "#dc3545";
+                }
+            });
+
+            // --- 6. 移除項目 ---
+            window.removeItem = function(index) {
+                let cart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+                cart.splice(index, 1);
+                localStorage.setItem('ticketgo_cart', JSON.stringify(cart));
+                
+                // 如果購物車清空，重置折扣狀態
+                if (cart.length === 0) {
+                    isDiscountApplied = false;
+                    promoInput.disabled = false;
+                    promoInput.value = "";
+                    applyBtn.disabled = false;
+                    applyBtn.textContent = "Apply";
+                    promoMsg.textContent = "";
+                }
+                
+                renderCart();
+            };
+
+            // --- 7. 結帳 (跳轉至 Ticket_Page) ---
+            checkoutBtn.addEventListener('click', () => {
+                const totalAmount = document.getElementById('final-total-display').textContent;
+                const confirmPay = confirm(`Total amount is ${totalAmount}. Confirm payment?`);
+                
+                if(confirmPay) {
+                    // 1. 讀取當前購物車
+                    const currentCart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+                    
+                    if(currentCart.length === 0) return;
+
+                    // 2. 將購物車內容視為「最新訂單」存入 LocalStorage，供 Ticket Page 讀取
+                    localStorage.setItem('ticketgo_current_order', JSON.stringify(currentCart));
+
+                    // 3. 清空購物車
+                    localStorage.removeItem('ticketgo_cart');
+
+                    // 4. 跳轉
+                    alert("Payment Successful! Generating your tickets...");
+                    window.location.href = "Ticket_Page.html";
+                }
+            });
+
+            // 初始化
+            renderCart();
+        });
+    </script>
+</body>
+</html>

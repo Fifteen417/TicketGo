@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketGo - Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Main_Page.css">
+</head>
+<body>
+
+    <div class="header-bar">
+        <span>Use code <strong>"Final"</strong> for 10% off</span>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">
+            <a href="Main_Page.html" style="text-decoration: none;">
+                <span class="logo-ticket">Ticket</span><span class="logo-go">Go</span>
+            </a>
+        </div>
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+                <input type="text" class="search-input" placeholder="Search events, artists...">
+            </div>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='faq.html'">Support</button>
+            
+            <div class="user-menu-wrapper">
+                <a href="Login_In_Page.html" class="nav-button sign-in-button">Sign In</a>
+                
+                <span id="cartBadge" class="cart-badge">0</span>
+
+                <div class="user-dropdown">
+                    <div class="cart-header-title">My Cart</div>
+                    
+                    <ul id="cartList" class="cart-items-list">
+                        <li class="empty-msg">Cart is empty</li>
+                    </ul>
+
+                    <div class="cart-footer">
+                        <div class="cart-total">Total: <span id="cartTotalDisplay">$0</span></div>
+                        <button class="checkout-btn" onclick="window.location.href='Cart_Page.html'">Checkout</button>
+                    </div>
+
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item logout-link">Log Out</a>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="content">
+        <div class="main-banner-wrapper">
+            <div class="main-banner">
+                <div class="slider-track">
+                    <div class="slide" style="background-image: url('image/Banner 1.png');"></div>
+                    <div class="slide" style="background-image: url('image/Banner 2.png');"></div>
+                </div>
+                <button class="arrow-button left-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button class="arrow-button right-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2>Trending Now</h2>
+            <a href="content.html" class="show-more-button">See all events ›</a>
+        </div>
+
+        <div class="event-grid">
+            
+            <div class="event-card-container" data-price="450">
+                <div class="event-card-image" style="background-image: url('image/Blackpink small.avif');"></div>
+                <div class="event-info-glass">
+                    <div class="event-meta">Nov 23 • 20:00</div>
+                    <div class="event-title">Blackpink</div>
+                    <div class="event-venue">Taipei Stadium</div>
+                    <a href="#" class="buy-btn">Buy</a>
+                </div>
+            </div>
+
+            <div class="event-card-container" data-price="480">
+                <div class="event-card-image" style="background-image: url('image/tylor swift small.jpg');"></div>
+                <div class="event-info-glass">
+                    <div class="event-meta">Dec 01 • 19:30</div>
+                    <div class="event-title">Taylor Swift</div>
+                    <div class="event-venue">Taipei Dome</div>
+                    <a href="#" class="buy-btn">Buy</a>
+                </div>
+            </div>
+            
+            <div class="event-card-container" data-price="320">
+                <div class="event-card-image" style="background-image: url('image/ariana grande small.jpg');"></div>
+                <div class="event-info-glass">
+                    <div class="event-meta">Jan 26 • 20:00</div>
+                    <div class="event-title">Ariana Grande</div>
+                    <div class="event-venue">Kaohsiung Arena</div>
+                    <a href="#" class="buy-btn">Buy</a>
+                </div>
+            </div>
+            
+            <div class="event-card-container" data-price="250">
+                <div class="event-card-image" style="background-image: url('image/billie eilish small.jpg');"></div>
+                <div class="event-info-glass">
+                    <div class="event-meta">Apr 23 • 19:00</div>
+                    <div class="event-title">Billie Eilish</div>
+                    <div class="event-venue">Taipei Music Center</div>
+                    <a href="#" class="buy-btn">Buy</a>
+                </div>
+            </div>
+
+            <div class="event-card-container" data-price="300">
+                <div class="event-card-image" style="background-image: url('image/the weeknd small.jpg');"></div>
+                <div class="event-info-glass">
+                    <div class="event-meta">May 15 • 21:00</div>
+                    <div class="event-title">The Weeknd</div>
+                    <div class="event-venue">Taichung Stadium</div>
+                    <a href="#" class="buy-btn">Buy</a>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. 初始化與變數 ---
+            const savedEmail = localStorage.getItem('ticketgo_user');
+            const signInBtn = document.querySelector('.sign-in-button');
+            const dropdown = document.querySelector('.user-dropdown');
+            const logoutLink = document.querySelector('.logout-link');
+            const badge = document.getElementById('cartBadge');
+            const cartList = document.getElementById('cartList');
+            const cartTotalDisplay = document.getElementById('cartTotalDisplay');
+
+            let cart = JSON.parse(localStorage.getItem('ticketgo_cart')) || [];
+
+            // --- 2. 購物車 UI 更新函數 (只負責顯示，不負責彈出) ---
+            function updateCartUI() {
+                if (cart.length > 0) {
+                    badge.textContent = cart.length;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+
+                cartList.innerHTML = '';
+                let total = 0;
+
+                if (cart.length === 0) {
+                    cartList.innerHTML = '<li class="empty-msg">Cart is empty</li>';
+                } else {
+                    cart.forEach((item, index) => {
+                        total += item.totalPrice; // 注意：這裡改用 totalPrice
+                        const li = document.createElement('li');
+                        li.className = 'cart-item';
+                        li.innerHTML = `
+                            <div class="cart-item-info">
+                                <span class="cart-item-title">${item.artist}</span>
+                                <span class="cart-item-price">$${item.totalPrice}</span>
+                            </div>
+                            <span class="remove-btn" onclick="removeItem(${index})">&times;</span>
+                        `;
+                        cartList.appendChild(li);
+                    });
+                }
+                cartTotalDisplay.textContent = '$' + total;
+            }
+
+            window.removeItem = function(index) {
+                cart.splice(index, 1);
+                localStorage.setItem('ticketgo_cart', JSON.stringify(cart));
+                updateCartUI();
+            };
+
+            // --- 3. 登錄邏輯 ---
+            if (savedEmail && signInBtn) {
+                const shortName = savedEmail.substring(0, 5);
+                signInBtn.textContent = shortName;
+                signInBtn.href = "#"; 
+                
+                signInBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropdown.classList.toggle('active');
+                });
+
+                if(logoutLink) {
+                    logoutLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        localStorage.removeItem('ticketgo_user');
+                        window.location.reload();
+                    });
+                }
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.user-menu-wrapper')) dropdown.classList.remove('active');
+                });
+                updateCartUI();
+            } else {
+                badge.style.display = 'none';
+            }
+            
+            // --- 4. Buy 按鈕只做跳轉 ---
+            const buyButtons = document.querySelectorAll('.buy-btn');
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault(); 
+                    
+                    const card = btn.closest('.event-card-container');
+                    const title = card.querySelector('.event-title').textContent;
+                    const meta = card.querySelector('.event-meta').textContent; 
+                    const venue = card.querySelector('.event-venue').textContent;
+                    const basePrice = card.getAttribute('data-price');
+                    
+                    const style = card.querySelector('.event-card-image').getAttribute('style');
+                    const imgUrlMatch = style.match(/url\(['"]?(.*?)['"]?\)/);
+                    const imgUrl = imgUrlMatch ? imgUrlMatch[1] : '';
+
+                    const params = new URLSearchParams();
+                    params.set('artist', title);
+                    params.set('time', meta);
+                    params.set('venue', venue);
+                    params.set('img', imgUrl);
+                    params.set('basePrice', basePrice);
+
+                    window.location.href = `seat_selection.html?${params.toString()}`;
+                });
+            });
+
+            // --- 5. Banner 邏輯 ---
+            const slides = document.querySelectorAll('.slide');
+            const leftArrow = document.querySelector('.left-arrow');
+            const rightArrow = document.querySelector('.right-arrow');
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+            
+            function goToSlide(index) {
+                if(totalSlides === 0) return;
+                slides[currentIndex].classList.remove('active');
+                if (index < 0) currentIndex = totalSlides - 1;
+                else if (index >= totalSlides) currentIndex = 0;
+                else currentIndex = index;
+                slides[currentIndex].classList.add('active');
+            }
+            
+            if (leftArrow && rightArrow) {
+                leftArrow.addEventListener('click', () => { goToSlide(currentIndex - 1); });
+                rightArrow.addEventListener('click', () => { goToSlide(currentIndex + 1); });
+                setInterval(() => { goToSlide(currentIndex + 1); }, 5000);
+            }
+            goToSlide(0);
+        });
+    </script>
+</body>
+</html>

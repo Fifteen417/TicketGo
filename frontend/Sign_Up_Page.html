@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketGo - Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Sign_Up_Page.css">
+</head>
+<body>
+
+    <div class="page-container">
+        <main class="signup-card">
+            <div class="card-header">
+                <a href="Main_Page.html" style="text-decoration: none;">
+                    <span class="logo-ticket">Ticket</span><span class="logo-go">Go</span>
+                </a>
+            </div>
+            <h1 class="card-title">Sign Up</h1>
+
+            <form class="signup-form">
+                <div class="input-group">
+                    <label class="input-label">Gmail</label>
+                    <input type="email" id="signup-email" placeholder="name@example.com" class="apple-input" required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Password</label>
+                    <input type="password" id="signup-pass" placeholder="Create a password" class="apple-input" required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Confirm Password</label>
+                    <input type="password" id="signup-confirm-pass" placeholder="Confirm your password" class="apple-input" required>
+                </div>
+                <button type="submit" class="apple-button">Submit</button>
+            </form>
+
+            <div class="card-footer">
+                <p>Already have an account? <a href="Login_In_Page.html">Sign In</a></p>
+            </div>
+        </main>
+        <div class="background-glow"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('.signup-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-pass').value;
+                const confirmPassword = document.getElementById('signup-confirm-pass').value;
+
+                if (password !== confirmPassword) {
+                    alert("Passwords do not match!");
+                    return;
+                }
+                
+                if (email && password) {
+                    const userData = { email: email, password: password };
+                    localStorage.setItem('ticketgo_database', JSON.stringify(userData));
+                    localStorage.setItem('ticketgo_user', email);
+                    alert("Account created successfully!");
+                    window.location.href = 'Main_Page.html'; 
+                }
+            });
+        });
+    </script>
+</body>
+</html>

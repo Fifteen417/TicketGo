@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketGo - My Tickets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Ticket_Page.css">
+</head>
+<body>
+
+    <div class="header-bar">
+        <span>Enjoy the show!</span>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">
+            <a href="Main_Page.html" style="text-decoration: none;">
+                <span class="logo-ticket">Ticket</span><span class="logo-go">Go</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="ticket-container">
+        <h1>Your Tickets</h1>
+        <p class="subtitle">Please show this QR code to the staff at the entrance.</p>
+        
+        <div id="tickets-wrapper" class="tickets-wrapper">
+            </div>
+
+        <div class="action-area">
+            <button class="home-btn" onclick="window.location.href='Main_Page.html'">Back to Home</button>
+            
+            <p class="countdown-text" id="countdown-text">
+                Redirecting to Home in <span id="timer-num" style="color: #FF3B30; font-weight: 700;">30</span> seconds.<br>
+                Please take a screenshot to save.
+            </p>
+            
+            <button id="stop-btn" class="stop-btn">Stop Auto-redirect</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. 獲取數據
+            const userEmail = localStorage.getItem('ticketgo_user');
+            const orders = JSON.parse(localStorage.getItem('ticketgo_current_order'));
+            const wrapper = document.getElementById('tickets-wrapper');
+
+            if (!orders || orders.length === 0) {
+                wrapper.innerHTML = '<p style="text-align:center; color:#888; font-size: 18px;">No tickets found. <a href="Main_Page.html" style="color:#0095FF;">Go Home</a></p>';
+                return;
+            }
+
+            // 2. 生成票券
+            orders.forEach((order, index) => {
+                const card = document.createElement('div');
+                card.className = 'ticket-card';
+
+                // 整理座位字串
+                const seatInfoDisplay = order.seats ? order.seats.map(s => {
+                    if(!s.id) return s.type;
+                    const parts = s.id.split('-'); 
+                    return `${s.type} (R${parts[1]}-S${parts[2]})`;
+                }).join('; ') : 'General Admission';
+
+                // QR Code 純文字內容
+                const qrPlainText = 
+`[TICKETGO PASS]
+Event: ${order.artist}
+Date: ${order.time}
+Venue: ${order.venue}
+Seats: ${seatInfoDisplay}
+Guest: ${userEmail || 'Guest'}`;
+
+                // 使用 API 生成圖片 URL
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=10&data=${encodeURIComponent(qrPlainText)}`;
+
+                // HTML 結構
+                card.innerHTML = `
+                    <div class="ticket-poster" style="background-image: url('${order.img}');"></div>
+                    
+                    <div class="ticket-info-section">
+                        <div class="event-name">${order.artist}</div>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Date & Time</span>
+                                <span class="value">${order.time}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Venue</span>
+                                <span class="value">${order.venue}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">User</span>
+                                <span class="value">${userEmail || 'Guest'}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Seats</span>
+                                <span class="value highlight">${seatInfoDisplay}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ticket-right">
+                        <div class="qr-code-box">
+                            <img src="${qrCodeUrl}" alt="Ticket QR Code">
+                        </div>
+                        <div class="scan-text">Scan for Entry</div>
+                    </div>
+
+                    <div class="punch-hole top"></div>
+                    <div class="punch-hole bottom"></div>
+                `;
+
+                wrapper.appendChild(card);
+            });
+
+            // --- 3. [修改] 倒數計時邏輯 (30秒) ---
+            let timeLeft = 30; // 設定為 30 秒
+            const timerDisplay = document.getElementById('timer-num');
+            const countdownText = document.getElementById('countdown-text');
+            const stopBtn = document.getElementById('stop-btn');
+            
+            const countdownInterval = setInterval(() => {
+                timeLeft--;
+                if(timerDisplay) timerDisplay.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = 'Main_Page.html'; 
+                }
+            }, 1000); 
+
+            stopBtn.addEventListener('click', () => {
+                clearInterval(countdownInterval);
+                countdownText.innerHTML = "Auto-redirect cancelled.";
+                countdownText.style.color = "#28a745";
+                stopBtn.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+:root {
+    --color-bg: #F5F5F7;
+    --color-text-main: #1D1D1F;
+    --color-text-secondary: #86868B;
+    --color-accent: #000947; /* Dark Navy */
+    --color-accent-hover: #001285;
+    --color-border: #D2D2D7;
+    
+    --radius-input: 12px;
+    --radius-button: 12px;
+    --font-main: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", sans-serif;
+    --shadow-input-focus: 0 0 0 4px rgba(0, 9, 71, 0.16);
+}
+
+* { box-sizing: border-box; }
+body, html { margin: 0; padding: 0; height: 100%; font-family: var(--font-main); background-color: #fff; color: var(--color-text-main); }
+
+.login-container { display: flex; height: 100vh; width: 100vw; }
+
+.left-panel {
+    flex: 60; background-image: url('image/dark background.png'); background-size: cover; background-position: center;
+    position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 60px;
+}
+.left-panel::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.3); z-index: 1; }
+.logo-overlay, .hero-text { position: relative; z-index: 2; }
+.logo-overlay { font-size: 28px; font-weight: 700; }
+.logo-ticket { color: #fff; }
+.logo-go { color: #0095FF; } /* Bright Blue Go */
+.hero-text h1 { color: #fff; font-size: 56px; line-height: 1.1; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
+
+.right-panel { flex: 40; background-color: #FFFFFF; display: flex; align-items: center; justify-content: center; padding: 40px; }
+.form-wrapper { width: 100%; max-width: 420px; }
+.form-header { margin-bottom: 40px; }
+.form-header h2 { font-size: 34px; font-weight: 700; margin: 0; color: var(--color-text-main); }
+
+.input-group { margin-bottom: 24px; }
+.input-label { display: block; font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 8px; margin-left: 2px; }
+.apple-input {
+    width: 100%; height: 52px; padding: 0 16px; font-size: 17px; font-family: var(--font-main); color: var(--color-text-main);
+    background-color: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-input); transition: all 0.2s ease; outline: none;
+}
+.apple-input:focus { border-color: var(--color-accent); box-shadow: var(--shadow-input-focus); }
+.apple-input::placeholder { color: #ccc; }
+
+.apple-button {
+    width: 100%; height: 52px; margin-top: 10px; background-color: var(--color-accent); color: #fff;
+    font-size: 17px; font-weight: 600; border: none; border-radius: var(--radius-button); cursor: pointer; transition: all 0.2s ease;
+    display: flex; align-items: center; justify-content: center;
+}
+.apple-button:hover { background-color: var(--color-accent-hover); transform: scale(1.005); }
+.apple-button:active { transform: scale(0.98); }
+
+.auth-footer { margin-top: 32px; text-align: left; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+.footer-text { color: var(--color-text-secondary); }
+.footer-link { color: #0095FF; text-decoration: none; font-weight: 500; }
+.footer-link:hover { text-decoration: underline; }
+
+@media (max-width: 900px) { .login-container { flex-direction: column; } .left-panel { flex: 35; padding: 40px; } .hero-text h1 { font-size: 32px; } .right-panel { flex: 65; } }

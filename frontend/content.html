@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicketGo - Find Events</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="content.css">
+    </head>
+<body>
+
+    <div class="header-bar">
+        <span>Use code <strong>"Final"</strong> for 10% off</span>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">
+            <a href="Main_Page.html" style="text-decoration: none;">
+                <span class="logo-ticket">Ticket</span><span class="logo-go">Go</span>
+            </a>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <span class="search-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="text" class="search-input" placeholder="What are you searching">
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="window.location.href='faq.html'">Support</button>
+            
+            <div class="user-menu-wrapper">
+                <a href="Login_In_Page.html" class="nav-button sign-in-button">Sign In</a>
+                <div class="user-dropdown">
+                    <a href="Cart_Page.html" class="dropdown-item cart-link"><span>Cart</span></a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item logout-link">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Find your next OMG moment</h1>
+                <p>Browse some of the best live events and get tickets that will put you in the middle of it all!</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="list-container">
+        
+        <div class="filter-container">
+            <div class="date-filter-wrapper">
+                <button class="filter-btn" id="date-filter-btn">Date</button>
+                <div class="date-dropdown" id="date-dropdown">
+                    <button class="all-months-option selected" data-month="All">All Months</button>
+                    <div class="month-grid">
+                        <button class="month-option has-event" data-month="Jan">Jan</button>
+                        <button class="month-option" data-month="Feb">Feb</button>
+                        <button class="month-option" data-month="Mar">Mar</button>
+                        <button class="month-option has-event" data-month="Apr">Apr</button>
+                        <button class="month-option has-event" data-month="May">May</button>
+                        <button class="month-option has-event" data-month="Jun">Jun</button>
+                        <button class="month-option has-event" data-month="Jul">Jul</button>
+                        <button class="month-option has-event" data-month="Aug">Aug</button>
+                        <button class="month-option has-event" data-month="Sep">Sep</button>
+                        <button class="month-option has-event" data-month="Oct">Oct</button>
+                        <button class="month-option has-event" data-month="Nov">Nov</button>
+                        <button class="month-option has-event" data-month="Dec">Dec</button>
+                    </div>
+                </div>
+            </div>
+            <div class="currency-wrapper">
+                <button class="filter-btn currency-btn" id="currency-btn">
+                    <span id="currency-label">USD ($)</span>
+                </button>
+                <div class="currency-dropdown" id="currency-dropdown">
+                    <div class="currency-option selected" data-value="USD">USD ($)</div>
+                    <div class="currency-option" data-value="MYR">MYR (RM)</div>
+                    <div class="currency-option" data-value="TWD">TWD (NT$)</div>
+                </div>
+            </div>
+            <div class="price-filter">
+                <span class="price-label">Price</span>
+                <div class="price-slider-container">
+                    <span class="range-val" id="min-val-display">100</span>
+                    <input type="range" min="100" max="500" value="100" class="slider" id="price-slider">
+                    <div class="price-input-wrapper">
+                        <span id="currency-symbol">$</span>
+                        <input type="number" id="price-input" value="100" min="100" max="500" class="price-input">
+                    </div>
+                </div>
+                <button id="go-btn" class="go-btn">GO</button>
+                <button class="reset-btn" id="reset-price-btn" title="Reset Filters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
+            </div>
+        </div>
+
+        <div class="event-list-grid" id="event-grid">
+            
+            <div class="event-item-card" data-month="Nov" data-base-price="450" data-price="450">
+                <div class="card-img" style="background-image: url('image/Blackpink small.avif');"></div>
+                <div class="card-info">
+                    <div class="card-badge">5 tickets left</div>
+                    <h3 class="card-title">Blackpink</h3>
+                    <div class="card-time">Nov 23 - <span class="blue-text">20:00pm</span></div>
+                    <div class="card-venue">Taipei Stadium</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$450</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Dec" data-base-price="480" data-price="480">
+                <div class="card-img" style="background-image: url('image/tylor swift small.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">Selling fast</div>
+                    <h3 class="card-title">Taylor Swift</h3>
+                    <div class="card-time">Dec 01 - <span class="blue-text">19:30pm</span></div>
+                    <div class="card-venue">Taipei Dome</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$480</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Jan" data-base-price="320" data-price="320">
+                <div class="card-img" style="background-image: url('image/ariana grande small.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">New Added</div>
+                    <h3 class="card-title">Ariana Grande</h3>
+                    <div class="card-time">Jan 26 - <span class="blue-text">20:00pm</span></div>
+                    <div class="card-venue">Kaohsiung Arena</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$320</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Apr" data-base-price="250" data-price="250">
+                <div class="card-img" style="background-image: url('image/billie eilish small.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">Low Stock</div>
+                    <h3 class="card-title">Billie Eilish</h3>
+                    <div class="card-time">Apr 23 - <span class="blue-text">19:00pm</span></div>
+                    <div class="card-venue">Taipei Music Center</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$250</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="May" data-base-price="300" data-price="300">
+                <div class="card-img" style="background-image: url('image/the weeknd small.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">Selling fast</div>
+                    <h3 class="card-title">The Weeknd</h3>
+                    <div class="card-time">May 15 - <span class="blue-text">21:00pm</span></div>
+                    <div class="card-venue">Taichung Stadium</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$300</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Jun" data-base-price="380" data-price="380">
+                <div class="card-img" style="background-image: url('image/ed sheeran.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">Popular</div>
+                    <h3 class="card-title">Ed Sheeran</h3>
+                    <div class="card-time">Jun 10 - <span class="blue-text">19:30pm</span></div>
+                    <div class="card-venue">Taipei Arena</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$380</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Jul" data-base-price="420" data-price="420">
+                <div class="card-img" style="background-image: url('image/beyonce.png');"></div>
+                <div class="card-info">
+                    <div class="card-badge">Almost Gone</div>
+                    <h3 class="card-title">Beyonce</h3>
+                    <div class="card-time">Jul 22 - <span class="blue-text">20:00pm</span></div>
+                    <div class="card-venue">Kaohsiung Stadium</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$420</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Aug" data-base-price="400" data-price="400">
+                <div class="card-img" style="background-image: url('image/dua lipa.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">Selling fast</div>
+                    <h3 class="card-title">Dua Lipa</h3>
+                    <div class="card-time">Aug 05 - <span class="blue-text">19:30pm</span></div>
+                    <div class="card-venue">Taipei Dome</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$400</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Sep" data-base-price="460" data-price="460">
+                <div class="card-img" style="background-image: url('image/harry styles.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">VIP Available</div>
+                    <h3 class="card-title">Harry Styles</h3>
+                    <div class="card-time">Sep 18 - <span class="blue-text">20:00pm</span></div>
+                    <div class="card-venue">Taoyuan Arena</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$460</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+            <div class="event-item-card" data-month="Oct" data-base-price="500" data-price="500">
+                <div class="card-img" style="background-image: url('image/rihanna.jpg');"></div>
+                <div class="card-info">
+                    <div class="card-badge">Hot Event</div>
+                    <h3 class="card-title">Rihanna</h3>
+                    <div class="card-time">Oct 08 - <span class="blue-text">19:00pm</span></div>
+                    <div class="card-venue">Taipei Dome</div>
+                </div>
+                <div class="card-action">
+                    <div class="card-price">$500</div>
+                    <a href="#" class="buy-button">BUY</a>
+                </div>
+            </div>
+
+        </div>
+        
+        <div id="no-results" style="display: none; text-align: center; padding: 40px; color: #888; font-size: 18px;">
+            No events found matching your filters.
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Login Logic ---
+            const savedEmail = localStorage.getItem('ticketgo_user');
+            const signInBtn = document.querySelector('.sign-in-button');
+            const dropdown = document.querySelector('.user-dropdown');
+            const logoutLink = document.querySelector('.logout-link');
+
+            if (savedEmail && signInBtn) {
+                const shortName = savedEmail.substring(0, 5);
+                signInBtn.textContent = shortName;
+                signInBtn.href = "#"; 
+                signInBtn.addEventListener('click', (e) => {
+                    e.preventDefault(); e.stopPropagation(); dropdown.classList.toggle('active');
+                });
+                if(logoutLink) {
+                    logoutLink.addEventListener('click', (e) => {
+                        e.preventDefault(); localStorage.removeItem('ticketgo_user'); window.location.reload();
+                    });
+                }
+                document.addEventListener('click', (e) => {
+                    if (!e.target.closest('.user-menu-wrapper')) dropdown.classList.remove('active');
+                });
+            }
+
+            // --- 2. BUY Button Redirect ONLY (No Popup) ---
+            const buyButtons = document.querySelectorAll('.buy-button');
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    const card = btn.closest('.event-item-card');
+                    const title = card.querySelector('.card-title').textContent;
+                    const timeText = card.querySelector('.card-time').textContent; 
+                    const venue = card.querySelector('.card-venue').textContent;
+                    const style = card.querySelector('.card-img').getAttribute('style');
+                    const imgUrlMatch = style.match(/url\(['"]?(.*?)['"]?\)/);
+                    const imgUrl = imgUrlMatch ? imgUrlMatch[1] : '';
+                    const basePrice = card.getAttribute('data-base-price');
+
+                    const params = new URLSearchParams();
+                    params.set('artist', title);
+                    params.set('time', timeText);
+                    params.set('venue', venue);
+                    params.set('img', imgUrl);
+                    params.set('basePrice', basePrice);
+
+                    window.location.href = `seat_selection.html?${params.toString()}`;
+                });
+            });
+
+            // --- 3. Filtering & Currency Logic ---
+            const slider = document.getElementById('price-slider');
+            const priceInput = document.getElementById('price-input');
+            const resetBtn = document.getElementById('reset-price-btn');
+            const goBtn = document.getElementById('go-btn');
+            const currencyBtn = document.getElementById('currency-btn');
+            const currencyLabel = document.getElementById('currency-label');
+            const currencyDropdown = document.getElementById('currency-dropdown');
+            const currencyOptions = document.querySelectorAll('.currency-option');
+            const currencySymbol = document.getElementById('currency-symbol');
+            const minValDisplay = document.getElementById('min-val-display');
+            const dateBtn = document.getElementById('date-filter-btn');
+            const dateDropdown = document.getElementById('date-dropdown');
+            const monthOptions = document.querySelectorAll('.month-option');
+            const allMonthsBtn = document.querySelector('.all-months-option');
+            const eventCards = document.querySelectorAll('.event-item-card');
+            const noResultsMsg = document.getElementById('no-results');
+
+            const exchangeRates = {
+                USD: { rate: 1, symbol: '$', min: 100, max: 500 },
+                MYR: { rate: 4.7, symbol: 'RM', min: 1000, max: 2400 },
+                TWD: { rate: 32, symbol: 'NT$', min: 8000, max: 16000 }
+            };
+
+            let currentCurrency = 'USD';
+            let currentPriceFilter = 100; 
+            let currentSelectedMonth = 'All';
+
+            function updateCurrency(currency) {
+                currentCurrency = currency;
+                const config = exchangeRates[currency];
+                currencyLabel.textContent = `${currency} (${config.symbol})`;
+                currencySymbol.textContent = config.symbol;
+                slider.min = config.min; slider.max = config.max;
+                minValDisplay.textContent = config.min;
+                priceInput.min = config.min; priceInput.max = config.max;
+                currentPriceFilter = config.min; slider.value = currentPriceFilter; priceInput.value = currentPriceFilter;
+                eventCards.forEach(card => {
+                    const basePrice = parseInt(card.getAttribute('data-base-price'));
+                    const newPrice = Math.round(basePrice * config.rate);
+                    card.querySelector('.card-price').textContent = `${config.symbol}${newPrice}`;
+                    card.setAttribute('data-price', newPrice);
+                });
+                filterEvents(); 
+            }
+
+            function filterEvents() {
+                let visibleCount = 0;
+                eventCards.forEach(card => {
+                    const cardPrice = parseInt(card.getAttribute('data-price'));
+                    const cardMonth = card.getAttribute('data-month');
+                    const priceMatch = cardPrice >= currentPriceFilter;
+                    const dateMatch = currentSelectedMonth === 'All' || cardMonth === currentSelectedMonth;
+                    if (priceMatch && dateMatch) { card.style.display = 'flex'; visibleCount++; } else { card.style.display = 'none'; }
+                });
+                noResultsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+
+            function updatePriceState(val) { currentPriceFilter = parseInt(val); slider.value = currentPriceFilter; priceInput.value = currentPriceFilter; }
+
+            if(currencyBtn && currencyDropdown) {
+                currencyBtn.addEventListener('click', (e) => { e.stopPropagation(); currencyDropdown.classList.toggle('active'); });
+                currencyOptions.forEach(opt => {
+                    opt.addEventListener('click', (e) => {
+                        currencyOptions.forEach(o => o.classList.remove('selected')); e.target.classList.add('selected');
+                        updateCurrency(e.target.getAttribute('data-value')); currencyDropdown.classList.remove('active');
+                    });
+                });
+                document.addEventListener('click', (e) => { if (!e.target.closest('.currency-wrapper')) currencyDropdown.classList.remove('active'); });
+            }
+
+            if(slider && priceInput) {
+                slider.addEventListener('input', function() { updatePriceState(this.value); });
+                priceInput.addEventListener('input', function() {
+                    let val = parseInt(this.value); let config = exchangeRates[currentCurrency];
+                    if(val >= config.min && val <= config.max) updatePriceState(val);
+                });
+                if(goBtn) goBtn.addEventListener('click', filterEvents);
+                if(resetBtn) {
+                    resetBtn.addEventListener('click', () => {
+                        let config = exchangeRates[currentCurrency]; updatePriceState(config.min);
+                        currentSelectedMonth = 'All'; dateBtn.textContent = 'Date';
+                        monthOptions.forEach(m => m.classList.remove('selected')); allMonthsBtn.classList.add('selected'); filterEvents();
+                    });
+                }
+            }
+            if(dateBtn && dateDropdown) {
+                dateBtn.addEventListener('click', (e) => { e.stopPropagation(); dateDropdown.classList.toggle('active'); });
+                monthOptions.forEach(opt => {
+                    opt.addEventListener('click', (e) => {
+                        monthOptions.forEach(m => m.classList.remove('selected')); allMonthsBtn.classList.remove('selected');
+                        e.target.classList.add('selected'); currentSelectedMonth = e.target.getAttribute('data-month');
+                        dateBtn.textContent = currentSelectedMonth; dateDropdown.classList.remove('active');
+                    });
+                });
+                if(allMonthsBtn) allMonthsBtn.addEventListener('click', (e) => {
+                    monthOptions.forEach(m => m.classList.remove('selected')); e.target.classList.add('selected');
+                    currentSelectedMonth = 'All'; dateBtn.textContent = 'Date'; dateDropdown.classList.remove('active');
+                });
+                document.addEventListener('click', (e) => { if (!e.target.closest('.date-filter-wrapper')) dateDropdown.classList.remove('active'); });
+            }
+        });
+    </script>
+</body>
+</html>
