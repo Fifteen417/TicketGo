@@ -45,22 +45,43 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.querySelector('.signin-form');
-            form.addEventListener('submit', (e) => {
+            const BACKEND_URL = 'https://ticketgo-api-txjr.onrender.com';
+
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const inputEmail = document.getElementById('signin-email').value;
                 const inputPass = document.getElementById('signin-pass').value;
-                const storedData = localStorage.getItem('ticketgo_database');
-                
-                if (!storedData) {
-                    alert("No account found. Please Sign Up first.");
-                    return;
-                }
-                const userAccount = JSON.parse(storedData);
-                if (inputEmail === userAccount.email && inputPass === userAccount.password) {
-                    localStorage.setItem('ticketgo_user', inputEmail);
-                    window.location.href = 'Main_Page.html';
-                } else {
-                    alert("Invalid Email or Password!");
+
+                try {
+                    // ✅ 關鍵修正：呼叫後端 API 進行登入 (login)
+                    const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: inputEmail,
+                            password: inputPass 
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // 登入成功
+                        alert("Login successful!");
+                        
+                        // 將登入的 Email 儲存到 Local Storage，供其他頁面判斷登入狀態
+                        localStorage.setItem('ticketgo_user', data.user.email);
+                        
+                        // 跳轉到主頁面
+                        window.location.href = 'Main_Page.html'; 
+                    } else {
+                        // 登入失敗 (後端會返回 'Invalid Credentials')
+                        alert(`Login Failed: ${data.message || 'Invalid Email or Password!'}`);
+                    }
+
+                } catch (error) {
+                    console.error('Login API Error:', error);
+                    alert("Network error. Unable to connect to the server. Please try again later.");
                 }
             });
         });
