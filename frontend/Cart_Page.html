@@ -78,6 +78,7 @@
             const signInBtn = document.querySelector('.sign-in-button');
             const dropdown = document.querySelector('.user-dropdown');
             const logoutLink = document.querySelector('.logout-link');
+            const BACKEND_URL = 'https://ticketgo-api-txjr.onrender.com';
 
             if (savedEmail && signInBtn) {
                 signInBtn.textContent = savedEmail.substring(0, 5);
